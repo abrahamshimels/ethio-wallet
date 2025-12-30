@@ -130,7 +130,10 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             ElevatedButton(onPressed: (){
-
+              _authController.logout();
+              if (context.mounted) {
+                context.go('/sign-in');
+              }
             }, child: const Text('Log out')),
           ],
         ),
