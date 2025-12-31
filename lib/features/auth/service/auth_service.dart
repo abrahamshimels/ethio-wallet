@@ -163,6 +163,8 @@ class AuthService {
     }
   }
 
+  bool get isLoggedIn => FirebaseAuth.instance.currentUser != null;
+
   // =========================
   // PRIVATE ERROR HANDLER
   // =========================

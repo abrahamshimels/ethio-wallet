@@ -1,7 +1,6 @@
-import 'package:ethio_wallet/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:ethio_wallet/features/auth/controller/auth_controller.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_routes.dart';
 
@@ -11,132 +10,157 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+    return Scaffold(
+      backgroundColor: Colors.black, // Dark background as per image
+      body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 26,
-                  backgroundColor: AppColors.primary.withOpacity(0.1),
-                  child: const Icon(Icons.person, color: AppColors.primary),
-                ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Donye Collins',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Iamcollinsdonye@gmail.com',
-                      style: TextStyle(color: AppColors.textSecondary),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.edit_outlined),
-                  onPressed: () => context.push(AppRoutes.editProfile),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Lifetime Earnings',
-                            style: TextStyle(color: AppColors.textSecondary),
-                          ),
-                          SizedBox(height: 6),
-                          Text(
-                            '+€68.45',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
-                      ),
+            // 1. Top Navigation Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Profile',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Average Rate',
-                            style: TextStyle(color: AppColors.textSecondary),
-                          ),
-                          SizedBox(height: 6),
-                          Text(
-                            '8.85%',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
-                      ),
+                  TextButton(
+                    onPressed: () => context.push(AppRoutes.editProfile),
+                    child: const Text(
+                      'Edit Profile',
+                      style: TextStyle(color: Colors.white70, fontSize: 16),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => context.push(AppRoutes.editProfile),
-                child: const Text('Edit Profile'),
+                ],
               ),
             ),
+
+            // 2. Profile Info Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 45,
+                    backgroundColor: Color(
+                      0xFFFFE0B2,
+                    ), // Skin tone background from image
+                    child: Text(
+                      "😜",
+                      style: TextStyle(fontSize: 40),
+                    ), // Emoji or Image
+                  ),
+                  const SizedBox(width: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Donye Collins',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'Iamcollinsdonye@gmail.com',
+                        style: TextStyle(color: Colors.white60, fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
             const SizedBox(height: 20),
-            const Text(
-              'Earn more',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 8),
-            const Card(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  'Refer friends, complete KYC, and keep your trading streaks to unlock higher limits and better spreads.',
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 15,
+
+            // 3. Menu Container (The large greyish card)
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF3E414E), // Dark blue-grey background
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 30,
+                    horizontal: 10,
+                  ),
+                  child: Column(
+                    children: [
+                      _buildMenuItem(
+                        icon: Icons.person_rounded,
+                        title: 'My Account',
+                        onTap: () => context.push(AppRoutes.editProfile),
+                      ),
+                      _buildMenuItem(
+                        icon: Icons.help_outline_rounded,
+                        title: 'Help Center',
+                        onTap: () {},
+                      ),
+                      _buildMenuItem(
+                        icon: Icons.phone_in_talk_rounded,
+                        title: 'Contact',
+                        onTap: () {},
+                      ),
+                      // Optional: Add Log out here or keep it as a menu item
+                      _buildMenuItem(
+                        icon: Icons.logout_rounded,
+                        title: 'Log out',
+                        onTap: () {
+                          _authController.logout();
+                          context.go('/sign-in');
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-            ElevatedButton(onPressed: (){
-              _authController.logout();
-              if (context.mounted) {
-                context.go('/sign-in');
-              }
-            }, child: const Text('Log out')),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildMenuItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      onTap: onTap,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      leading: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFE8EAF6), // Light purple/blue icon background
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Icon(icon, color: const Color(0xFF5C6BC0), size: 24),
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Color(0xFF1A1D21), // Dark text as per image
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      trailing: const Icon(
+        Icons.arrow_forward_ios_rounded,
+        color: Color(0xFF1A1D21),
+        size: 18,
       ),
     );
   }

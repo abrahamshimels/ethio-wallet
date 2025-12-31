@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../core/constants/app_colors.dart';
 
 class ExchangePage extends StatelessWidget {
@@ -9,69 +8,237 @@ class ExchangePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final offers = const [
       _Offer(
-        symbol: 'BTC',
-        name: 'Bitcoin',
         price: '13,600,973.66 USD',
-        trader: 'cryptoswap',
         limits: '1000–3000 USD',
+        orders: '653',
       ),
-      _Offer(
-        symbol: 'BTC',
-        name: 'Bitcoin',
-        price: '13,650,973.66 USD',
-        trader: 'cryptoswap',
-        limits: '700–2300 USD',
-      ),
+      _Offer(price: '13,650,973.66 USD', limits: '700–2300 USD', orders: '607'),
+      _Offer(price: '13,700,973.66 USD', limits: '700–2300 USD', orders: '607'),
     ];
 
-    return DefaultTabController(
-      length: 2,
-      child: SafeArea(
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(24, 12, 24, 0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'P2P Exchange',
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
+            /// ───────── HEADER ─────────
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'P2P',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.notifications_none),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            /// ───────── TOP TABS ─────────
+            Row(
+              children: const [
+                _TopTab(title: 'Overview', active: true),
+                _TopTab(title: 'My ads'),
+                Spacer(),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            /// ───────── BUY / SELL SWITCH ─────────
+            Container(
+              height: 46,
+              decoration: BoxDecoration(
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Text(
+                        'Buy',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        'Sell',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            /// ───────── CRYPTO INPUT ─────────
+            TextField(
+              readOnly: true,
+              decoration: InputDecoration(
+                hintText: 'Crypto currency',
+                hintStyle: const TextStyle(color: Colors.white38),
+                filled: true,
+                fillColor: AppColors.card,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Colors.white24),
                 ),
               ),
             ),
-            const TabBar(
-              indicatorSize: TabBarIndicatorSize.label,
-              tabs: [
-                Tab(text: 'Buy'),
-                Tab(text: 'Sell'),
+
+            const SizedBox(height: 14),
+
+            /// ───────── FILTER ROW ─────────
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.tune, size: 18),
+                  label: const Text('Filters'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                TextButton(onPressed: () {}, child: const Text('Clean filter')),
               ],
             ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  FilterChip(
-                    label: const Text('Crypto'),
-                    selected: true,
-                    onSelected: (_) {},
-                  ),
-                  const SizedBox(width: 8),
-                  FilterChip(
-                    label: const Text('USD'),
-                    selected: false,
-                    onSelected: (_) {},
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
+
+            const SizedBox(height: 12),
+
+            /// ───────── OFFERS LIST ─────────
             Expanded(
-              child: TabBarView(
-                children: [
-                  _OfferList(offers: offers),
-                  _OfferList(offers: offers),
-                ],
+              child: ListView.separated(
+                itemCount: offers.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final offer = offers[index];
+                  final highlighted = index == 0;
+
+                  return Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: highlighted ? AppColors.primary : Colors.white12,
+                      ),
+                      color: AppColors.card,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            const CircleAvatar(
+                              backgroundColor: Colors.orange,
+                              child: Icon(
+                                Icons.currency_bitcoin,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Text(
+                                  'BTC',
+                                  style: TextStyle(fontWeight: FontWeight.w700),
+                                ),
+                                Text(
+                                  'Bitcoin',
+                                  style: TextStyle(
+                                    color: AppColors.textSecondary,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            Text(
+                              offer.price,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.verified,
+                              size: 14,
+                              color: Colors.green,
+                            ),
+                            const SizedBox(width: 4),
+                            const Icon(
+                              Icons.verified,
+                              size: 14,
+                              color: Colors.blue,
+                            ),
+                            const SizedBox(width: 4),
+                            const Icon(
+                              Icons.verified,
+                              size: 14,
+                              color: Colors.orange,
+                            ),
+                            const SizedBox(width: 6),
+                            const Text(
+                              'cryptoswap',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              offer.limits,
+                              style: const TextStyle(
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                            Text(
+                              offer.orders,
+                              style: const TextStyle(
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -81,139 +248,38 @@ class ExchangePage extends StatelessWidget {
   }
 }
 
-class _OfferList extends StatelessWidget {
-  const _OfferList({required this.offers});
+/// ───────── SMALL TOP TAB ─────────
+class _TopTab extends StatelessWidget {
+  const _TopTab({required this.title, this.active = false});
 
-  final List<_Offer> offers;
+  final String title;
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
-      itemBuilder: (context, index) {
-        final offer = offers[index];
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: AppColors.primary.withOpacity(0.12),
-                      child: Text(
-                        offer.symbol,
-                        style: const TextStyle(color: AppColors.primary),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          offer.name,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          offer.symbol,
-                          style: const TextStyle(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    const Icon(Icons.chevron_right),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Price',
-                            style: TextStyle(color: AppColors.textSecondary),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            offer.price,
-                            style: const TextStyle(fontWeight: FontWeight.w700),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Trader',
-                            style: TextStyle(color: AppColors.textSecondary),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            offer.trader,
-                            style: const TextStyle(fontWeight: FontWeight.w700),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Limits',
-                          style: TextStyle(color: AppColors.textSecondary),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          offer.limits,
-                          style: const TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ],
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('Exchange'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-      separatorBuilder: (context, index) => const SizedBox(height: 12),
-      itemCount: offers.length,
+    return Padding(
+      padding: const EdgeInsets.only(right: 16),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: active ? Colors.white : Colors.white38,
+          decoration: active ? TextDecoration.underline : TextDecoration.none,
+        ),
+      ),
     );
   }
 }
 
+/// ───────── OFFER MODEL ─────────
 class _Offer {
   const _Offer({
-    required this.symbol,
-    required this.name,
     required this.price,
-    required this.trader,
     required this.limits,
+    required this.orders,
   });
 
-  final String symbol;
-  final String name;
   final String price;
-  final String trader;
   final String limits;
+  final String orders;
 }

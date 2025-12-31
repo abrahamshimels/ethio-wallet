@@ -5,12 +5,14 @@ import '../constants/app_colors.dart';
 class AppTheme {
   static ThemeData get light => ThemeData(
     useMaterial3: true,
+    brightness: Brightness.dark,
     colorScheme: ColorScheme.fromSeed(
       seedColor: AppColors.primary,
       primary: AppColors.primary,
       secondary: AppColors.accent,
       surface: AppColors.card,
       background: AppColors.background,
+      brightness: Brightness.dark,
     ),
     scaffoldBackgroundColor: AppColors.background,
     appBarTheme: const AppBarTheme(
@@ -26,7 +28,10 @@ class AppTheme {
       margin: EdgeInsets.zero,
     ),
     inputDecorationTheme: InputDecorationTheme(
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.white24),
+      ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: Colors.transparent),
@@ -36,7 +41,7 @@ class AppTheme {
         borderSide: const BorderSide(color: AppColors.primary, width: 1.4),
       ),
       filled: true,
-      fillColor: Colors.white,
+      fillColor: AppColors.card,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(

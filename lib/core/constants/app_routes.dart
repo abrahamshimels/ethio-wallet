@@ -9,5 +9,5 @@ class AppRoutes {
   static const String editProfile = '/profile/edit';
   static const String verifyEmail = '/verify-email';
   static const String forgetPassword = '/forgot-password';
-
+  static const String withdraw = '/wallet/withdraw';
 }
