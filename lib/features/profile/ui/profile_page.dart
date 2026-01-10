@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ethio_wallet/features/auth/controller/auth_controller.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_routes.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -13,121 +13,132 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black, // Dark background as per image
       body: SafeArea(
-        child: Column(
-          children: [
-            // 1. Top Navigation Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Profile',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => context.push(AppRoutes.editProfile),
-                    child: const Text(
-                      'Edit Profile',
-                      style: TextStyle(color: Colors.white70, fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+        child: StreamBuilder<User?>(
+          stream: _authController.authStateChanges,
+          builder: (context, snapshot) {
+            final user = snapshot.data;
+            final displayName = user?.displayName ?? 'Guest';
+            final email = user?.email ?? 'No email provided';
+            final photoURL = user?.photoURL;
 
-            // 2. Profile Info Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-              child: Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 45,
-                    backgroundColor: Color(
-                      0xFFFFE0B2,
-                    ), // Skin tone background from image
-                    child: Text(
-                      "😜",
-                      style: TextStyle(fontSize: 40),
-                    ), // Emoji or Image
-                  ),
-                  const SizedBox(width: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        'Donye Collins',
+            return Column(
+              children: [
+                // 1. Top Navigation Bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Profile',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 22,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 4),
-                      Text(
-                        'Iamcollinsdonye@gmail.com',
-                        style: TextStyle(color: Colors.white60, fontSize: 14),
+                      TextButton(
+                        onPressed: () => context.push(AppRoutes.editProfile),
+                        child: const Text(
+                          'Edit Profile',
+                          style: TextStyle(color: Colors.white70, fontSize: 16),
+                        ),
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // 3. Menu Container (The large greyish card)
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF3E414E), // Dark blue-grey background
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
-                  ),
                 ),
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 30,
-                    horizontal: 10,
-                  ),
-                  child: Column(
+
+                // 2. Profile Info Section
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                  child: Row(
                     children: [
-                      _buildMenuItem(
-                        icon: Icons.person_rounded,
-                        title: 'My Account',
-                        onTap: () => context.push(AppRoutes.editProfile),
+                      CircleAvatar(
+                        radius: 45,
+                        backgroundColor: const Color(0xFFFFE0B2),
+                        backgroundImage: photoURL != null ? NetworkImage(photoURL) : null,
+                        child: photoURL == null
+                            ? const Text(
+                                "😜",
+                                style: TextStyle(fontSize: 40),
+                              )
+                            : null,
                       ),
-                      _buildMenuItem(
-                        icon: Icons.help_outline_rounded,
-                        title: 'Help Center',
-                        onTap: () {},
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.phone_in_talk_rounded,
-                        title: 'Contact',
-                        onTap: () {},
-                      ),
-                      // Optional: Add Log out here or keep it as a menu item
-                      _buildMenuItem(
-                        icon: Icons.logout_rounded,
-                        title: 'Log out',
-                        onTap: () {
-                          _authController.logout();
-                          context.go('/sign-in');
-                        },
+                      const SizedBox(width: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            displayName,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            email,
+                            style: const TextStyle(color: Colors.white60, fontSize: 14),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
-          ],
+
+                const SizedBox(height: 20),
+
+                // 3. Menu Container (The large greyish card)
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF3E414E), // Dark blue-grey background
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40),
+                      ),
+                    ),
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 30,
+                        horizontal: 10,
+                      ),
+                      child: Column(
+                        children: [
+                          _buildMenuItem(
+                            icon: Icons.person_rounded,
+                            title: 'My Account',
+                            onTap: () => context.push(AppRoutes.editProfile),
+                          ),
+                          _buildMenuItem(
+                            icon: Icons.help_outline_rounded,
+                            title: 'Help Center',
+                            onTap: () {},
+                          ),
+                          _buildMenuItem(
+                            icon: Icons.phone_in_talk_rounded,
+                            title: 'Contact',
+                            onTap: () {},
+                          ),
+                          // Optional: Add Log out here or keep it as a menu item
+                          _buildMenuItem(
+                            icon: Icons.logout_rounded,
+                            title: 'Log out',
+                            onTap: () {
+                              _authController.logout();
+                              context.go('/sign-in');
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
