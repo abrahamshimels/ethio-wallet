@@ -125,7 +125,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: AppColors.primary.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -160,7 +160,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                       color: AppColors.card,
                       borderRadius: BorderRadius.circular(18),
                       border: Border.all(
-                        color: AppColors.primary.withOpacity(0.06),
+                        color: AppColors.primary.withValues(alpha: 0.06),
                       ),
                       boxShadow: const [
                         BoxShadow(
@@ -179,7 +179,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: AppColors.primary.withOpacity(0.12),
+                                color: AppColors.primary.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: const Icon(

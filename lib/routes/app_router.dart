@@ -15,6 +15,7 @@ import '../features/home/ui/home_page.dart';
 import '../features/onboarding/ui/onboarding_page.dart';
 import '../features/profile/ui/edit_profile_page.dart';
 import '../features/profile/ui/profile_page.dart';
+import '../features/wallet/models/balance_model.dart';
 import '../features/wallet/ui/wallet_page.dart';
 import '../features/wallet/ui/withdraw_page.dart';
 
@@ -95,7 +96,10 @@ final GoRouter appRouter = GoRouter(
               routes: [
                 GoRoute(
                   path: 'withdraw',
-                  builder: (context, state) => const WithdrawPage(),
+                  builder: (context, state) {
+                    final assets = state.extra as List<BalanceBreakdown>?;
+                    return WithdrawPage(assets: assets ?? []);
+                  },
                 ),
               ],
             ),

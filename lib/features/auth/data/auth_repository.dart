@@ -12,6 +12,9 @@ class AuthRepository {
     if (user == null) throw Exception("User not logged in");
 
     final firebaseToken = await user.getIdToken();
+    if (firebaseToken == null) {
+      throw Exception("Failed to obtain Firebase token");
+    }
 
     final response = await _authApi.exchangeToken(firebaseToken);
 

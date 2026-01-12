@@ -5,6 +5,7 @@ import '../../../core/constants/app_routes.dart';
 import '../service/wallet_service.dart';
 import '../models/balance_model.dart';
 import '../widgets/deposit_bottom_sheet.dart';
+import '../widgets/add_wallet_bottom_sheet.dart';
 
 class WalletPage extends StatefulWidget {
   const WalletPage({super.key});
@@ -53,13 +54,41 @@ class _WalletPageState extends State<WalletPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// ───────── TITLE ─────────
-                  const Text(
-                    'WALLET',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 1.2,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'WALLET',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () => setState(() {}),
+                            icon: const Icon(Icons.refresh),
+                            tooltip: 'Refresh Balance',
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              final currentAssets = breakdown.map((e) => e.symbol).toList();
+                              showAddWalletBottomSheet(
+                                context,
+                                existingAssets: currentAssets,
+                                onWalletCreated: () {
+                                  setState(() {});
+                                },
+                              );
+                            },
+                            icon: const Icon(Icons.add_circle_outline, size: 28),
+                            tooltip: 'Add Wallet',
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
 
                   const SizedBox(height: 24),
@@ -83,7 +112,7 @@ class _WalletPageState extends State<WalletPage> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            showDepositBottomSheet(context);
+                            showDepositBottomSheet(context, assets: breakdown);
                           },
                           child: const Text('Deposit'),
                         ),
@@ -91,7 +120,7 @@ class _WalletPageState extends State<WalletPage> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: OutlinedButton(
-                          onPressed: () => context.push(AppRoutes.withdraw),
+                          onPressed: () => context.push(AppRoutes.withdraw, extra: breakdown),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.white,
                             side: const BorderSide(color: Colors.white24),
@@ -132,7 +161,7 @@ class _WalletPageState extends State<WalletPage> {
                   Expanded(
                     child: ListView.separated(
                       itemCount: breakdown.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 14),
+                      separatorBuilder: (_, _) => const SizedBox(height: 14),
                       itemBuilder: (context, index) {
                         final asset = breakdown[index];
                         final symbol = asset.symbol;
@@ -147,21 +176,18 @@ class _WalletPageState extends State<WalletPage> {
                           ),
                           child: Row(
                             children: [
-                              /// ICON
-                              CircleAvatar(
-                                radius: 22,
-                                backgroundColor: symbol == 'BTC'
-                                    ? Colors.amber
-                                    : (symbol == 'ETH' ? Colors.blueAccent : Colors.white),
-                                child: Icon(
-                                  symbol == 'BTC'
-                                      ? Icons.currency_bitcoin
-                                      : (symbol == 'ETH' ? Icons.change_circle_outlined : Icons.account_balance_wallet),
-                                  color: Colors.black,
+                                /// ICON
+                                CircleAvatar(
+                                  radius: 22,
+                                  backgroundColor: _getAssetColor(symbol).withValues(alpha: 0.2),
+                                  child: Icon(
+                                    _getAssetIcon(symbol),
+                                    color: _getAssetColor(symbol),
+                                    size: 24,
+                                  ),
                                 ),
-                              ),
 
-                              const SizedBox(width: 14),
+                                const SizedBox(width: 14),
 
                               /// NAME
                               Column(
@@ -220,6 +246,36 @@ class _WalletPageState extends State<WalletPage> {
         ),
       ),
     );
+  }
+
+  Color _getAssetColor(String symbol) {
+    switch (symbol.toUpperCase()) {
+      case 'BTC':
+        return Colors.orange;
+      case 'ETH':
+        return Colors.blueAccent;
+      case 'MATIC':
+        return Colors.purpleAccent;
+      case 'USDT':
+        return Colors.green;
+      default:
+        return Colors.white70;
+    }
+  }
+
+  IconData _getAssetIcon(String symbol) {
+    switch (symbol.toUpperCase()) {
+      case 'BTC':
+        return Icons.currency_bitcoin;
+      case 'ETH':
+        return Icons.change_circle_outlined;
+      case 'MATIC':
+        return Icons.layers_outlined;
+      case 'USDT':
+        return Icons.attach_money;
+      default:
+        return Icons.account_balance_wallet_outlined;
+    }
   }
 }
 

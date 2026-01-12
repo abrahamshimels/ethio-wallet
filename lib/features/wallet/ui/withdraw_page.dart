@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import '../models/balance_model.dart';
 import '../widgets/withdraw_body.dart';
 
 class WithdrawPage extends StatelessWidget {
-  const WithdrawPage({super.key});
+  final List<BalanceBreakdown> assets;
+  const WithdrawPage({super.key, required this.assets});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +13,7 @@ class WithdrawPage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
-          child: WithdrawBody(),
+          child: WithdrawBody(assets: assets),
         ),
       ),
     );

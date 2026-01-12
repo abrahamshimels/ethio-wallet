@@ -69,11 +69,20 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.w800,
                           ),
                     ),
-                    IconButton(
-                      onPressed: () {
-                        context.push(AppRoutes.profile);
-                      },
-                      icon: const Icon(Icons.settings_outlined),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () => setState(() {}),
+                          icon: const Icon(Icons.refresh),
+                          tooltip: 'Refresh',
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            context.push(AppRoutes.profile);
+                          },
+                          icon: const Icon(Icons.settings_outlined),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -125,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          showDepositBottomSheet(context);
+                          showDepositBottomSheet(context, assets: balanceData?.breakdown ?? []);
                         },
                         child: const Text('Deposit'),
                       ),
@@ -141,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                         ),
-                        onPressed: () => context.push(AppRoutes.withdraw),
+                        onPressed: () => context.push(AppRoutes.withdraw, extra: balanceData?.breakdown ?? []),
                         child: const Text('Withdraw'),
                       ),
                     ),
@@ -171,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                 Expanded(
                   child: ListView.separated(
                     itemCount: coins.length,
-                    separatorBuilder: (_, __) =>
+                    separatorBuilder: (_, _) =>
                         const Divider(height: 1, color: Colors.white12),
                     itemBuilder: (context, index) {
                       final coin = coins[index];
